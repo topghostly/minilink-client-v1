@@ -13,21 +13,15 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { useLogin, type user } from "@/quaries/useMe";
-import { useQuery } from "@tanstack/react-query";
+import { useMe } from "@/quaries/useMe";
 import { Navigate } from "react-router-dom";
-// import { useMe } from "@/quaries/useMe";
 
 export default function DashboardLayout() {
-  const { data: user } = useQuery<user | null>({
-    queryKey: ["me"],
-    queryFn: () => null, // no fetch — cache only
-    initialData: null,
-  });
+  const { data: user, isLoading } = useMe();
 
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   if (!user) {
     return <Navigate to="/auth/signin" />;
   }
@@ -66,7 +60,7 @@ export default function DashboardLayout() {
             <div className="bg-muted/50 aspect-video rounded-xl" />
             <div className="bg-muted/50 aspect-video rounded-xl" />
           </div>
-          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
+          <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min" />
         </div>
       </SidebarInset>
     </SidebarProvider>

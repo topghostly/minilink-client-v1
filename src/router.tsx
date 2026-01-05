@@ -4,6 +4,7 @@ import { SignIn } from "./features/auth/auth.pages";
 import { SignUp } from "./features/auth/auth.pages";
 import AuthLayout from "./features/auth/auth.layout";
 import DashboardLayout from "./features/dashboard/dashboard.layout";
+import ProtectedRoute from "./lib/protected-route";
 
 function Router() {
   return (
@@ -13,7 +14,14 @@ function Router() {
           <Route path="/auth/signin" element={<SignIn />} />
           <Route path="/auth/signup" element={<SignUp />} />
         </Route>
-        <Route path="/u" element={<DashboardLayout />}>
+        <Route
+          path="/u"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
           {/* <Route path="/dashboard" element={<Dashboard />} /> */}
         </Route>
         <Route path="/" element={<Navigate to="/u" />} />
