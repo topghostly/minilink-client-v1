@@ -26,7 +26,6 @@ export const api = async <T>(
     throw new Error("API response was not ok");
   }
   const data = await response.json();
-  console.log(data);
   return data as T;
 };
 

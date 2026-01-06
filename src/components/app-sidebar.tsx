@@ -23,7 +23,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { useMe } from "@/quaries/useMe";
+import { useMe, type user } from "@/quaries/useMe";
 // import { LoadingButton } from "./loading-button";
 import { Spinner } from "./ui/spinner";
 
@@ -116,9 +116,14 @@ const data = {
   // ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: user, isLoading } = useMe();
-
+export function AppSidebar({
+  user,
+  isLoading,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
+  user: user;
+  isLoading: boolean;
+}) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
