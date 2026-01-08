@@ -23,8 +23,26 @@ export const useEditLink = () => {
       original_link: string;
       human_readable: boolean;
     }) => {
-      return await api(`/api/v1/links/edit`, {
+      return await api(`/api/v1/links/update/${payload.id}`, {
         method: "PATCH",
+        body: JSON.stringify(payload),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-links"] });
+    },
+  });
+};
+
+export const useCreateLink = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: {
+      original_link: string;
+      is_human_readable: boolean;
+    }) => {
+      return await api(`/api/v1/links/create`, {
+        method: "POST",
         body: JSON.stringify(payload),
       });
     },

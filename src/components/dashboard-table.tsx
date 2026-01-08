@@ -144,7 +144,7 @@ const LinkActions = ({ item }: { item: Link }) => {
             onClick={() => setIsDeleteDialogOpen(true)}
             className="text-destructive focus:text-destructive"
           >
-            <Trash className="mr-2 h-4 w-4" />
+            <Trash className="mr-2 h-4 w-4 text-destructive" />
             Delete Link
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -155,9 +155,7 @@ const LinkActions = ({ item }: { item: Link }) => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Link</DialogTitle>
-            <DialogDescription>
-              Update the original URL, this would create a new short link.
-            </DialogDescription>
+            <DialogDescription>Update the original URL.</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleEdit} className="space-y-4 py-4">
             <div className="space-y-2">

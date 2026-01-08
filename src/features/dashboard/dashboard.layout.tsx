@@ -16,12 +16,27 @@ import {
 } from "@/components/ui/sidebar";
 import { useMe } from "@/quaries/useMe";
 import { useUserLinks, type Link } from "@/quaries/useUserLinks";
+import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useCreateLink } from "@/quaries/useLinkMutations";
 
 export default function DashboardLayout() {
   const { data: user, isLoading } = useMe();
-  const { data: links, isLoading: islinksLoading } = useUserLinks();
+  const { data: links } = useUserLinks();
   const [userLinks, setUserLinks] = useState<Link[]>([]);
 
   useEffect(() => {
@@ -71,7 +86,7 @@ export default function DashboardLayout() {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+          <div className="grid auto-rows-min gap-4 md:grid-cols-3 px-8">
             <div className="bg-muted/50 rounded-xl">
               <div className="p-8 flex gap-5 flex-col">
                 <h2 className="font-medium text-sm">Total number of links</h2>
@@ -100,8 +115,11 @@ export default function DashboardLayout() {
               </div>
             </div>
           </div>
+          <div className="w-full h-8 flex justify-start items-center px-8 mt-8">
+            <CreateLinkDialog />
+          </div>
           <div className="min-h-screen flex-1 rounded-xl md:min-h-min">
-            <div className="p-8 flex gap-5 flex-col">
+            <div className="px-8 flex gap-5 flex-col">
               {userLinks && <DashboardTable userLinks={userLinks} />}
             </div>
           </div>
@@ -110,3 +128,77 @@ export default function DashboardLayout() {
     </SidebarProvider>
   );
 }
+
+const CreateLinkDialog = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [originalLink, setOriginalLink] = useState("");
+  const [isHumanReadable, setIsHumanReadable] = useState(false);
+  const createMutation = useCreateLink();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    createMutation.mutate(
+      {
+        original_link: originalLink,
+        is_human_readable: isHumanReadable,
+      },
+      {
+        onSuccess: () => {
+          setIsOpen(false);
+          setOriginalLink("");
+          setIsHumanReadable(false);
+        },
+      }
+    );
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <span className="hover:bg-sidebar-ring/20 border rounded-[8px] duration-200 cursor-pointer p-2">
+          <Plus size={20} />
+        </span>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Create New Link</DialogTitle>
+          <DialogDescription>
+            Enter the original URL to create a shortened link.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="original-link">Original Link</Label>
+            <Input
+              id="original-link"
+              value={originalLink}
+              onChange={(e) => setOriginalLink(e.target.value)}
+              placeholder="https://example.com/very-long-url"
+              required
+            />
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="human-readable"
+              checked={isHumanReadable}
+              onCheckedChange={(checked) => setIsHumanReadable(!!checked)}
+            />
+            <Label htmlFor="human-readable">Human-readable link</Label>
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={createMutation.isPending}>
+              {createMutation.isPending ? "Creating..." : "Create"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};

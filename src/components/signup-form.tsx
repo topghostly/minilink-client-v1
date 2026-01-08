@@ -15,19 +15,28 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-// import {
-//   DropdownMenu,
-//   DropdownMenuTrigger,
-//   DropdownMenuRadioItem,
-//   DropdownMenuLabel,
-// } from "@/components/ui/dropdown-menu";
-// import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-// import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
+import { useState } from "react";
+import { useSignUp } from "@/quaries/useMe";
 
 export function SignUpForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { mutate, isPending } = useSignUp();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    mutate({
+      name,
+      mail: email,
+      password,
+    });
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="shadow-none border-none">
@@ -38,7 +47,7 @@ export function SignUpForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <FieldGroup>
               <Field>
                 <Button
@@ -77,8 +86,15 @@ export function SignUpForm({
                 Or continue with
               </FieldSeparator>
               <Field>
-                <FieldLabel htmlFor="Name">Name</FieldLabel>
-                <Input id="name" type="text" placeholder="Santa" required />
+                <FieldLabel htmlFor="name">Name</FieldLabel>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Santa"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
               </Field>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -86,16 +102,26 @@ export function SignUpForm({
                   id="email"
                   type="email"
                   placeholder="santa.clause@christmas.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </Field>
               <Field>
                 <FieldLabel htmlFor="password">Password</FieldLabel>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
               </Field>
 
               <Field>
-                <Button type="submit">Signup</Button>
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? "Signing up..." : "Signup"}
+                </Button>
                 <FieldDescription className="text-center">
                   Already have an account? <a href="/auth/signin">Sign in</a>
                 </FieldDescription>
@@ -111,18 +137,3 @@ export function SignUpForm({
     </div>
   );
 }
-
-// const RoleDropDown = () => {
-//   return (
-//     <DropdownMenu>
-//       <DropdownMenuTrigger asChild>
-//         <Button variant="outline">Select Role</Button>
-//       </DropdownMenuTrigger>
-//       <DropdownMenuContent>
-//         <DropdownMenuLabel>Please Select a role</DropdownMenuLabel>
-//         <DropdownMenuRadioItem value="admin">Admin</DropdownMenuRadioItem>
-//         <DropdownMenuRadioItem value="user">User</DropdownMenuRadioItem>
-//       </DropdownMenuContent>
-//     </DropdownMenu>
-//   );
-// };

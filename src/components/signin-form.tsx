@@ -25,7 +25,7 @@ export function SignInForm({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { mutate } = useLogin();
+  const { mutate, isPending } = useLogin();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -112,9 +112,8 @@ export function SignInForm({
                 />
               </Field>
               <Field>
-                <Button type="submit">
-                  {/* {mutate.isLoading ? "Loading..." : "Login"} */}
-                  Login
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? "Logging in..." : "Login"}
                 </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <a href="/auth/signup">Sign up</a>

@@ -6,6 +6,7 @@ import {
   LogOut,
   Sparkles,
   Star,
+  Trash2,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,6 +26,18 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useNavigate } from "react-router-dom";
+import { useDeleteUser, useLogout } from "@/quaries/useMe";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export function NavUser({
   user,
@@ -38,21 +51,15 @@ export function NavUser({
   const { isMobile } = useSidebar();
 
   const navigate = useNavigate();
+  const logoutMutation = useLogout();
+  const deleteUserMutation = useDeleteUser();
 
-  const signOut = async () => {
-    try {
-      const responce = await fetch("/api/v1/auth/sign-out", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (responce.ok) {
-        navigate("/auth/signin");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const signOut = () => {
+    logoutMutation.mutate();
+  };
+
+  const handleDeleteAccount = () => {
+    deleteUserMutation.mutate();
   };
 
   const starRepo = () => {
@@ -110,20 +117,62 @@ export function NavUser({
                 <Star />
                 Star repo
               </DropdownMenuItem>
-              {/* <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem> */}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={signOut}>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  <LogOut />
+                  Log out
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Are you sure you want to log out?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    You will need to sign in again to access your dashboard.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={signOut}>
+                    Log out
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            <DropdownMenuSeparator />
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  className="text-destructive"
+                >
+                  <Trash2 color="var(--destructive)" />
+                  Delete Account
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your account and remove your data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDeleteAccount}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Delete Account
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

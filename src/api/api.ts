@@ -5,6 +5,12 @@ export type LoginPayload = {
   password: string;
 };
 
+export type SignUpPayload = {
+  name: string;
+  mail: string;
+  password: string;
+};
+
 export const api = async <T>(
   url: string,
   options?: RequestInit
@@ -34,5 +40,25 @@ export const loginUser = (payload: LoginPayload) => {
   return api<LoginResponse>("/api/v1/auth/sign-in", {
     method: "POST",
     body: JSON.stringify(payload),
+  });
+};
+
+export const signUpUser = (payload: SignUpPayload) => {
+  console.log(payload);
+  return api<LoginResponse>("/api/v1/auth/sign-up", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+};
+
+export const logoutUser = () => {
+  return api<{ success: boolean }>("/api/v1/auth/sign-out", {
+    method: "POST",
+  });
+};
+
+export const deleteUser = () => {
+  return api<{ success: boolean }>("/api/v1/users/me", {
+    method: "DELETE",
   });
 };
