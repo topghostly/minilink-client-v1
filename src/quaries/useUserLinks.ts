@@ -11,7 +11,7 @@ export type Link = {
 type AllLinks = {
   data: Link[];
   error: string;
-  meta: any;
+  meta: string;
   success: boolean;
 };
 

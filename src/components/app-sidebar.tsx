@@ -23,7 +23,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { useMe, type user } from "@/quaries/useMe";
+import { type user } from "@/quaries/useMe";
 // import { LoadingButton } from "./loading-button";
 import { Spinner } from "./ui/spinner";
 

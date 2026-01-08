@@ -21,13 +21,13 @@ export type meResponse = {
   success: boolean;
   data: user;
   error: string;
-  meta: any;
+  meta: string;
 };
 export type LoginResponse = {
   success: boolean;
   data: user;
   error: string;
-  meta: any;
+  meta: string;
 };
 
 export const useLogin = () => {
