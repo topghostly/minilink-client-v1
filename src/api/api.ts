@@ -37,28 +37,40 @@ export const api = async <T>(
 
 export const loginUser = (payload: LoginPayload) => {
   console.log(payload);
-  return api<LoginResponse>("/api/v1/auth/sign-in", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+  return api<LoginResponse>(
+    `${import.meta.env.VITE_BASE_URL}api/v1/auth/sign-in`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }
+  );
 };
 
 export const signUpUser = (payload: SignUpPayload) => {
   console.log(payload);
-  return api<LoginResponse>("/api/v1/auth/sign-up", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+  return api<LoginResponse>(
+    `${import.meta.env.VITE_BASE_URL}api/v1/auth/sign-up`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }
+  );
 };
 
 export const logoutUser = () => {
-  return api<{ success: boolean }>("/api/v1/auth/sign-out", {
-    method: "POST",
-  });
+  return api<{ success: boolean }>(
+    `${import.meta.env.VITE_BASE_URL}api/v1/auth/sign-out`,
+    {
+      method: "POST",
+    }
+  );
 };
 
 export const deleteUser = () => {
-  return api<{ success: boolean }>("/api/v1/users/me", {
-    method: "DELETE",
-  });
+  return api<{ success: boolean }>(
+    `${import.meta.env.VITE_BASE_URL}api/v1/users/me`,
+    {
+      method: "DELETE",
+    }
+  );
 };

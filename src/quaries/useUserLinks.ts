@@ -20,7 +20,9 @@ export const useUserLinks = () => {
   return useQuery({
     queryKey: ["user-links"],
     queryFn: async () => {
-      const response = await api<AllLinks>(`/api/v1/links/all`);
+      const response = await api<AllLinks>(
+        `${import.meta.env.VITE_BASE_URL}api/v1/links/all`
+      );
       console.log(`The links responce is ${response}`);
       return response.data;
     },

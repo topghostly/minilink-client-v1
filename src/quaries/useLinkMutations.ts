@@ -5,9 +5,12 @@ export const useDeleteLink = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      return await api(`/api/v1/links/delete/${id}`, {
-        method: "DELETE",
-      });
+      return await api(
+        `${import.meta.env.VITE_BASE_URL}api/v1/links/delete/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-links"] });
@@ -23,10 +26,13 @@ export const useEditLink = () => {
       original_link: string;
       human_readable: boolean;
     }) => {
-      return await api(`/api/v1/links/update/${payload.id}`, {
-        method: "PATCH",
-        body: JSON.stringify(payload),
-      });
+      return await api(
+        `${import.meta.env.VITE_BASE_URL}api/v1/links/update/${payload.id}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify(payload),
+        }
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-links"] });
@@ -41,7 +47,7 @@ export const useCreateLink = () => {
       original_link: string;
       is_human_readable: boolean;
     }) => {
-      return await api(`/api/v1/links/create`, {
+      return await api(`${import.meta.env.VITE_BASE_URL}api/v1/links/create`, {
         method: "POST",
         body: JSON.stringify(payload),
       });

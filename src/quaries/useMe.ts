@@ -122,7 +122,9 @@ export const useMe = () => {
   return useQuery({
     queryKey: ["me"],
     queryFn: async () => {
-      const response = await api<meResponse>(`/api/v1/users/me`);
+      const response = await api<meResponse>(
+        `${import.meta.env.VITE_BASE_URL}api/v1/users/me`
+      );
       return response.data;
     },
     retry: false,
