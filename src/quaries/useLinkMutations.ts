@@ -9,7 +9,7 @@ export const useDeleteLink = () => {
         `${import.meta.env.VITE_BASE_URL}api/v1/links/delete/${id}`,
         {
           method: "DELETE",
-        }
+        },
       );
     },
     onSuccess: () => {
@@ -31,7 +31,7 @@ export const useEditLink = () => {
         {
           method: "PATCH",
           body: JSON.stringify(payload),
-        }
+        },
       );
     },
     onSuccess: () => {

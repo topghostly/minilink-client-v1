@@ -3,10 +3,10 @@ import DashboardTable from "@/components/dashboard-table";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
+  // BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
+  // BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -18,7 +18,6 @@ import { useMe } from "@/quaries/useMe";
 import { useUserLinks, type Link } from "@/quaries/useUserLinks";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -48,15 +47,12 @@ export default function DashboardLayout() {
   const mostClickedLink =
     userLinks.length > 0
       ? userLinks.reduce((prev, current) =>
-          prev.click_counts > current.click_counts ? prev : current
+          prev.click_counts > current.click_counts ? prev : current,
         )
       : null;
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
   if (!user) {
-    return <Navigate to="/auth/signin" />;
+    return null;
   }
 
   return (
@@ -73,14 +69,12 @@ export default function DashboardLayout() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
+                  <BreadcrumbPage>Dashboard</BreadcrumbPage>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
+                {/* <BreadcrumbSeparator className="hidden md:block" /> */}
+                {/* <BreadcrumbItem>
                   <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
+                </BreadcrumbItem> */}
               </BreadcrumbList>
             </Breadcrumb>
           </div>
@@ -108,7 +102,12 @@ export default function DashboardLayout() {
                 <h2 className="font-medium text-sm">
                   Link with major engagement
                 </h2>
-                <p className="text-4xl font-semibold text-muted-foreground break-all hover:underline hover:text-blue-600 duration-200 cursor-pointer">
+                <p
+                  className="text-4xl font-semibold text-muted-foreground break-all hover:underline hover:text-blue-600 duration-200 cursor-pointer"
+                  onClick={() => {
+                    window.open(`${mostClickedLink?.original_link}`, "_blank");
+                  }}
+                >
                   {mostClickedLink ? mostClickedLink.short_link : "N/A"}
                   {/* Add link to the site after adding the domain name  */}
                 </p>
@@ -148,7 +147,7 @@ const CreateLinkDialog = () => {
           setOriginalLink("");
           setIsHumanReadable(false);
         },
-      }
+      },
     );
   };
 

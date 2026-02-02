@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { toast } from "sonner";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -84,7 +85,17 @@ const DashboardTable = ({ userLinks }: { userLinks: Link[] }) => {
                     {item.original_link}
                   </RouterLink>
                 </TableCell>
-                <TableCell>{item.short_link}</TableCell>
+                <TableCell
+                  className="cursor-pointer hover:text-blue-600 transition-colors"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `https://chopam.name.ng/${item.short_link}`,
+                    );
+                    toast.success("Shortlink copied to clipboard");
+                  }}
+                >
+                  {item.short_link}
+                </TableCell>
                 <TableCell>{item.click_counts}</TableCell>
                 <TableCell>{item.created_at}</TableCell>
                 <TableCell>
@@ -123,7 +134,7 @@ const LinkActions = ({ item }: { item: Link }) => {
       },
       {
         onSuccess: () => setIsEditDialogOpen(false),
-      }
+      },
     );
   };
 
